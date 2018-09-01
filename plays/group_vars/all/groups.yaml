@@ -2,6 +2,6 @@
 
 group_items:
   - name: staff
-    gid: 500
-  - name: ttlix
     gid: 501
+  - name: ttlix
+    gid: 2001

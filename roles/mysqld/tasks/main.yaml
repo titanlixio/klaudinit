@@ -1,0 +1,33 @@
+---
+
+- name: Yum install mysql repo
+  yum:
+    name:  "{{yum_mysql_repo_packges}}"
+    state: present
+  tags:
+    - mysqld
+    - pkgs
+  when:
+    - yum_mysql_repo_packges is defined
+
+- name: Yum install mysql server
+  yum:
+    name: "{{ yum_mysqld_packages }}"
+    state: present
+  tags:
+    - mysqld
+    - pkgs
+  when:
+    - yum_mysqld_packages is defined
+
+- name: Systemd start mysql server
+  systemd:
+    name: mysqld
+    state: started
+    enabled: yes
+  tags:
+    - mysqld
+    - systemctl
+  when:
+    - yum_mysqld_packages is defined
+

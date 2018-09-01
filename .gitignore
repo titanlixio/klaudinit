@@ -2,5 +2,13 @@
 *~
 *.swp
 *.swo
+*.orig
+
 .bin
+.vagrant
+
 vaults
+
+vboxs/.ssh
+
+vendors/ansible-role-*

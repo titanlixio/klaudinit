@@ -1,0 +1,7 @@
+---
+
+- name: ansible-role-etcd
+  src: git+https://github.com/githubixx/ansible-role-etcd.git
+
+- name: ansible-role-ssl-certs
+  src: git+https://github.com/jdauphant/ansible-role-ssl-certs.git

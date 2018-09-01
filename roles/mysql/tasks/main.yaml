@@ -1,0 +1,22 @@
+---
+
+- name: Yum install mysql repo
+  yum:
+    name:  "{{yum_mysql_repo_packges}}"
+    state: present
+  tags:
+    - mysql
+    - pkgs
+  when:
+    - yum_mysql_repo_packges is defined
+
+
+- name: Yum install mysql client
+  yum: 
+    name:  "{{yum_mysql_packages}}"
+    state: present
+  tags:
+    - mysql
+    - pkgs
+  when:
+    - yum_mysql_repo_packges is defined

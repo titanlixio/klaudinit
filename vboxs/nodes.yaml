@@ -1,0 +1,28 @@
+---
+
+- name: 'node01'
+  ansible_groups:
+    - 'base'
+  box: 'centos/7'
+  desktop: false
+  interfaces:
+    - ip: 10.39.1.2
+      auto_config: true
+      method: 'static'
+  mem: 4096
+  vcpu: 2
+  provision: true
+
+- name: 'ctrl01'
+  ansible_groups:
+    - 'base'
+  box: 'centos/7'
+  desktop: false
+  interfaces:
+    - ip: 10.39.1.199
+      auto_config: true
+      method: 'static'
+  mem: 1024
+  vcpu: 1
+  provision: true
+

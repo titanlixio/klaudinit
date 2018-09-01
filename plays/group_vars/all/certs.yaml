@@ -1,0 +1,3 @@
+ssl_certs_common_name: "dev.ttlix"
+ssl_certs_path_owner: "vagrant"
+ssl_certs_path_group: "vagrant"

@@ -1,0 +1,54 @@
+---
+
+- name: 'controller'
+  ansible_groups:
+    - 'base'
+  box: 'centos/7'
+  desktop: false
+  interfaces:
+    - ip: 10.39.1.199
+      auto_config: true
+      method: 'static'
+  mem: 512
+  vcpu: 1
+  provision: true
+
+- name: 'node01'
+  ansible_groups:
+    - 'base'
+    - 'mysqld'
+  box: 'centos/7'
+  desktop: false
+  interfaces:
+    - ip: 10.39.1.2
+      auto_config: true
+      method: 'static'
+  mem: 2048
+  vcpu: 2
+  provision: true
+
+- name: 'node02'
+  ansible_groups:
+    - 'base'
+  box: 'centos/7'
+  desktop: false
+  interfaces:
+    - ip: 10.39.1.3
+      auto_config: true
+      method: 'static'
+  mem: 2048
+  vcpu: 2
+  provision: true
+
+- name: 'node03'
+  ansible_groups:
+    - 'base'
+  box: 'centos/7'
+  desktop: false
+  interfaces:
+    - ip: 10.39.1.4
+      auto_config: true
+      method: 'static'
+  mem: 2048
+  vcpu: 2
+  provision: true

@@ -18,15 +18,6 @@
     - node_name is defined
     - node_domain is defined
 
-# Duplicated 
-# - name: Write hostname
-#   shell: "hostname > /etc/hostname"
-#   tags:
-#     - base
-#   when:
-#     - node_name is defined
-#     - node_domain is defined
-
 - name: Show Vols
   debug: msg="{{item}}"
   with_items: "{{vols_items}}"
@@ -209,26 +200,3 @@
   tags:
     - base
     - crond
-
-- name: Yum install mysql repo
-  yum:
-    name:  "{{yum_mysql_repo_packges}}"
-    state: present
-  tags:
-    - base
-    - pkgs
-    - mysql
-  when:
-    - yum_mysql_repo_packges is defined
-
-
-- name: Yum install mysql client
-  yum: 
-    name:  "{{yum_mysql_packages}}"
-    state: present
-  tags:
-    - base
-    - pkgs
-    - mysql
-  when:
-    - yum_mysql_repo_packges is defined

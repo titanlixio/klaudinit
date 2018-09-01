@@ -2,7 +2,33 @@
 
 - name:  base.yaml | All roles
   hosts: all
-  sudo:  False
+  become: True
+  become_user: root
 
   roles:
     - base
+
+
+- name:  base.yaml | Controller roles
+  hosts: controller
+  become: True
+  become_user: root
+
+  roles:
+
+  post_tasks:
+    - name: Install Galaxy Roles
+      shell: |
+        ansible-galaxy install -r {{playbook_dir}}/../requirements.yaml \
+          --roles-path {{playbook_dir}}/../vendors
+      tags:
+        - base
+        - vendor
+
+- name:  base.yaml | MySQL Client roles
+  hosts: mysql
+  become: True
+  become_user: root
+
+  roles:
+    - mysql

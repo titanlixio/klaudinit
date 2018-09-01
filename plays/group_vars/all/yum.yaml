@@ -9,4 +9,5 @@ yum_default_packages:
   - psmisc
   - which
   - expect
+  - git
   - epel-release

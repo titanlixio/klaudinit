@@ -1,0 +1,41 @@
+---
+
+- name:  site.yaml | All roles
+  hosts: all
+  become: True
+  become_user: root
+
+  roles:
+
+- name:  site.yaml | MySQL Server roles
+  hosts: mysqld
+  become: True
+  become_user: root
+
+  roles:
+    - mysqld
+
+- name: site.yaml | SSL Certs roles
+  hosts: all
+  become: True
+  become_user: root
+
+  roles:
+    - ansible-role-ssl-certs
+
+- name:  site.yaml | Etcd roles
+  hosts: k8s_etcd
+  become: True
+  become_user: root
+
+  pre_tasks:
+    - name: Remove default template files
+      file: 
+        path: '{{playbook_dir}}/../vendors/ansible-role-etcd/templates/etc'
+        state: absent
+      tags:
+        - etcd
+        - etcd-systemd
+
+  roles:
+    - { role: 'ansible-role-etcd' }
