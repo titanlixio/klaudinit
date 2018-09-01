@@ -23,8 +23,8 @@
   roles:
     - ansible-role-ssl-certs
 
-- name:  site.yaml | Etcd roles
-  hosts: k8s_etcd
+- name:  site.yaml | Clean Etcd Default Templates
+  hosts: controller
   become: True
   become_user: root
 
@@ -37,5 +37,10 @@
         - etcd
         - etcd-systemd
 
+- name:  site.yaml | Etcd roles
+  hosts: k8s_etcd
+  become: True
+  become_user: root
+
   roles:
-    - { role: 'ansible-role-etcd' }
+    - ansible-role-etcd

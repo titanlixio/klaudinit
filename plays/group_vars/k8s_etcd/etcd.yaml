@@ -60,7 +60,7 @@ etcd_settings:
 
 # Certificate authority and certificate files for etcd
 etcd_certificates:
-  - ca-etcd.pem        # client server TLS trusted CA key file/peer server TLS trusted CA file
-  - ca-etcd-key.pem    # CA key file
-  - cert-etcd.pem      # peer server TLS cert file
-  - cert-etcd-key.pem  # peer server TLS key file
+#  - ca-etcd.pem        # client server TLS trusted CA key file/peer server TLS trusted CA file
+#  - ca-etcd-key.pem    # CA key file
+#  - cert-etcd.pem      # peer server TLS cert file
+#  - cert-etcd-key.pem  # peer server TLS key file

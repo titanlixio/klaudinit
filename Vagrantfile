@@ -62,6 +62,7 @@ Vagrant.configure("2") do |config|
     #   rsync__exclude: "hosts"
     config.vm.define node_id['name'] do |node|
       node.vm.box = node_id['box']
+      node.vm.box_check_update = false
       node.vm.hostname = node_id['name']
       node.vm.provider "virtualbox" do |vb|
         vb.memory = node_id['mem']
@@ -104,20 +105,17 @@ Vagrant.configure("2") do |config|
             if int['network_name'] == "None"
               node.vm.network :private_network, \
               type: "dhcp"
-            end
-            if int['network_name'] != "None"
+            elsif int['network_name'] != "None"
               node.vm.network :private_network, \
               virtualbox__intnet: int['network_name'], \
               type: "dhcp"
             end
-          end
-          if int['method'] == "static"
+          elsif int['method'] == "static"
             if int['network_name'] == "None"
               node.vm.network :private_network, \
               ip: int['ip'], \
               auto_config: int['auto_config']
-            end
-            if int['network_name'] != "None"
+            elsif int['network_name'] != "None"
               node.vm.network :private_network, \
               virtualbox__intnet: int['network_name'], \
               ip: int['ip'], \
@@ -148,18 +146,10 @@ Vagrant.configure("2") do |config|
           node_infos = nodes.map { |node| "#{node['name']}:#{node['interfaces'][0]['ip']}" }
           if node_id != num_nodes
 
-            #config.vm.provision :file,  
-            #  source: ".vagrant/machines/#{node_last['name']}/virtualbox/private_key", 
-            #  destination: "/tmp/ctrl.pem"
-
             config.vm.provision :shell, 
               path: "scripts/vbox.sh", keep_color: "true"
 
           elsif node_id == num_nodes
-
-            #config.vm.provision :file,  
-            #  source: ".vagrant/machines/#{node_last['name']}/virtualbox/private_key", 
-            #  destination: "/tmp/ctrl.pem"
 
             config.vm.provision :shell,
               path: "scripts/vbox.sh", keep_color: "true",
@@ -168,17 +158,18 @@ Vagrant.configure("2") do |config|
             # Run ansible via ctrl01 not vbox host.
             node.vm.provision "ansible_local" do |ansible|
               ansible.limit          = "all"
-              ansible.playbook       = "plays/base.yaml"
+              ansible.playbook       = "plays/boot.yaml"
               ansible.inventory_path = "envs/dev.ini"
-              ansible.verbose        = "vvv"
+              ansible.verbose        = "v"
             end
 
-            #node.vm.provision "ansible" do |ansible|
-            #  ansible.limit = "all"
-            #  #runs Ansible playbook for installing roles/executing tasks
-            #  ansible.playbook = "playbook.yml"
-            #  ansible.groups = ansible_groups
-            #end
+            # Run addon via ctrl01 not vbox host.
+            node.vm.provision "ansible_local" do |ansible|
+              ansible.limit          = "all"
+              ansible.playbook       = "plays/site.yaml"
+              ansible.inventory_path = "envs/dev.ini"
+              ansible.verbose        = "v"
+            end
             
           end
         end

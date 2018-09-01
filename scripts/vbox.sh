@@ -12,13 +12,25 @@ TMP_CTRL=/tmp/ctrl
 echo PRJ_HOME=$PRJ_HOME
 echo USER=$USER
 
+if [ -f '/etc/selinux/config' ]; then
+  sed -i 's/SELINUX=.*/SELINUX=disabled/g' /etc/selinux/config
+  setenforce 0
+fi
+
+if [ -f '/etc/ssh/sshd_config' ]; then 
+  sed -i 's/^PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  sed -i 's/^GSSAPIAuthentication.*/GSSAPIAuthentication no/g' /etc/ssh/sshd_config
+  systemctl restart sshd
+fi
+
 if [ -d $PRJ_HOME ]; then
   echo $PRJ_HOME
   mkdir -p /tmp/klaudinit/vboxs/.ssh
   if [ ! -f /tmp/klaudinit/vboxs/.ssh/id_rsa ]; then
     ssh-keygen -N '' -f /tmp/klaudinit/vboxs/.ssh/id_rsa
   fi
-  cp /tmp/klaudinit/vboxs/.ssh/id_rsa ${TMP_CTRL}.pem
+  cp /tmp/klaudinit/vboxs/.ssh/id_rsa     ${TMP_CTRL}.pem
+  cp /tmp/klaudinit/vboxs/.ssh/id_rsa.pub ${TMP_CTRL}.pub
   # cp $PRJ_HOME/.vagrant/machines/$PRJ_NODE/virtualbox/private_key ${TMP_CTRL}.pem
 fi
 
@@ -31,7 +43,9 @@ if [ ! -d $HOME/.ssh ]; then
 fi
 
 if [ -f ${TMP_CTRL}.pem ]; then
-  echo "$(ssh-keygen -y -f ${TMP_CTRL}.pem) $PRJ_USER@$PRJ_NODE" > ${TMP_CTRL}.pub
+  if [ ! -f ${TMP_CTRL}.pub ]; then
+    echo "$(ssh-keygen -y -f ${TMP_CTRL}.pem) $PRJ_USER@$PRJ_NODE" > ${TMP_CTRL}.pub
+  fi
   if [ $PRJ_CTRL -gt 0 ]; then
     # cat     ${TMP_CTRL}.pem
     cp        ${TMP_CTRL}.pem $HOME/.ssh/id_rsa
@@ -64,7 +78,6 @@ if [ ! -f $HOME/.ssh/authorized_keys ]; then
   cat $HOME/.ssh/id_rsa.pub | tee -a $HOME/.ssh/authorized_keys \
     && chmod 600 $HOME/.ssh/authorized_keys
 fi
-
 
 # rm -rf $PRJ_HOME/vaults/vpassfile
 if [ ! -f $PRJ_HOME/vaults/vpassfile ]; then
