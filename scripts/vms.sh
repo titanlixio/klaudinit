@@ -4,6 +4,15 @@ cd $PRJ_HOME
 ACTION=${1:-"help"}
 SCRIPT=$0
 shift
+
+if [ -d $PRJ_HOME/vboxs/ ]; then
+  if [ ! -f $PRJ_HOME/vboxs/.ssh/id_rsa ]; then
+    mkdir -p $PRJ_HOME/vboxs/.ssh
+    ssh-keygen -N '' -C "$USER@ctrl01" -f $PRJ_HOME/vboxs/.ssh/id_rsa
+  fi
+fi
+
+
 if [ $ACTION = 'help' ]; then
   echo "Usage:"
   echo "  $SCRIPT down [machine]"
