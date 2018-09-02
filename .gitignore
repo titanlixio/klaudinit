@@ -12,3 +12,7 @@ vaults
 vboxs/.ssh
 
 vendors/ansible-role-*
+
+.terraform
+terraform.d
+vboxs/terraform*
