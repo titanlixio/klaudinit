@@ -4,7 +4,7 @@ provider "tencentcloud" {
   region = "ap-guangzhou"
 }
 
-module "tencentcloud-terraform-local-debug" {
+module "tencentcloud-play1" {
   source   = "vboxs/tencentcloud"
   image_id = "img-2xnn7dex"
   availability_zone = "ap-guangzhou-3"

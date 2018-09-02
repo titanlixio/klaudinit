@@ -17,3 +17,32 @@ variable "availability_zone" {
 variable "image_id" {
   default = "img-2xnn7dex"
 }
+
+variable "ssh_user" {
+  default = "root"
+}
+
+variable "private_key_path" {
+  default = "vboxs/.ssh/id_rsa"
+}
+
+variable "public_key_path" {
+  default = "vboxs/.ssh/id_rsa.pub"
+}
+
+variable "user_data_script" {
+  default = "sh -c 'mkdir -p /tmp/xxoo'"
+}
+
+variable "klaudinit_home" {
+  default = "/tmp/klaudinit"
+}
+
+variable "data_disks" {
+  default = [
+    {
+      data_disk_type = "CLOUD_BASIC"
+      data_disk_size = 50
+    },
+  ]
+}
