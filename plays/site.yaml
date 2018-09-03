@@ -122,12 +122,13 @@
   roles:
     - ansible-role-docker
 
-
   post_tasks:
     - name: Docker service config
       template:
         src: etc/default/docker.j2
         dest: "{{docker_conf_dir}}/docker"
+      notify:
+        - restart docker
       tags:
         - docker
 
@@ -140,4 +141,3 @@
         - restart docker
       tags:
         - docker
-        - reboot
