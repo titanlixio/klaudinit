@@ -1,0 +1,15 @@
+#jinja2: trim_blocks:False
+#{%- macro cluster_hosts() -%}
+#{%- for host in groups['etcd'] -%}
+#{{hostvars[host]['ansible_hostname']}}={{etcd_schema}}://{{hostvars[host]['ansible_' + etcd_interface].ipv4.address}}:{{etcd_peer_port}}{% if not loop.last %},{% endif %}
+#{%- endfor -%} 
+#{%- endmacro -%}
+#{%- set x=etcd_settings.__setitem__('initial-cluster',cluster_hosts()) -%}
+
+DOCKERD=/usr/bin/dockerd
+
+DOCKER_OPTS=" --data-root {{docker_data_dir}} --bip={{docker_boot_ip}} \
+  -H 127.0.0.1:2376 -H {{hostvars['node01']['ansible_' + docker_interface].ipv4.address}}:2376 -H unix:///var/run/docker.sock \
+  --cluster-advertise {{docker_interface}}:2376 \
+  --cluster-store etcd://localhost:2379 \
+"

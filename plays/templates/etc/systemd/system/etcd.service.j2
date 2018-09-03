@@ -1,6 +1,6 @@
 #jinja2: trim_blocks:False
 {%- macro cluster_hosts() -%}
-{%- for host in groups['k8s_etcd'] -%}
+{%- for host in groups['etcd'] -%}
 {{hostvars[host]['ansible_hostname']}}={{etcd_schema}}://{{hostvars[host]['ansible_' + etcd_interface].ipv4.address}}:{{etcd_peer_port}}{% if not loop.last %},{% endif %}
 {%- endfor -%} 
 {%- endmacro -%}
@@ -12,6 +12,7 @@ Description=etcd
 Documentation=https://github.com/coreos
 
 [Service]
+User={{etcd_user}}
 ExecStart={{etcd_bin_dir}}/etcd \
 {%- for setting in etcd_settings|sort %}
   --{{setting}} "{{etcd_settings[setting]}}" {% if not loop.last %}\{% endif %}

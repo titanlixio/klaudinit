@@ -1,0 +1,14 @@
+---
+
+docker_service_state: stopped
+docker_service_enabled: yes
+docker_restart_handler_state: restarted
+
+docker_home_dir: /home/docker
+docker_data_dir: "{{docker_home_dir}}/var/lib/docker"
+docker_conf_dir: /etc/default
+
+docker_boot_ip: "172.17.0.1/16"
+docker_interface: eth1
+
+docker_repo_ip: "13.33.169.108"

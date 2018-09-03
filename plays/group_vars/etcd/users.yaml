@@ -1,0 +1,11 @@
+---
+
+etcd_user: etcd
+
+etcd_user_items:
+  - name:  "{{etcd_user}}"
+    uid:   2379
+    group: "{{etcd_group}}"
+    shell: /sbin/nologin
+    groups:
+      - "{{etcd_group}}"

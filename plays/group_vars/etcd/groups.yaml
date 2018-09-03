@@ -1,0 +1,7 @@
+---
+
+etcd_group: etcd
+
+etcd_group_items:
+  - name: "{{etcd_group}}"
+    gid: 2379

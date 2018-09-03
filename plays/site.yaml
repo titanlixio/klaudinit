@@ -23,7 +23,7 @@
   roles:
     - ansible-role-ssl-certs
 
-- name:  site.yaml | Clean Etcd Default Templates
+- name:  site.yaml | Prepare etcd installation
   hosts: controller
   become: True
   become_user: root
@@ -38,9 +38,106 @@
         - etcd-systemd
 
 - name:  site.yaml | Etcd roles
-  hosts: k8s_etcd
+  hosts: etcd
   become: True
   become_user: root
 
+  pre_tasks:
+    - name: Create groups
+      group:
+        name:     "{{item.name}}"
+        gid:      "{{item.gid}}"
+        state:    present
+      with_items: "{{etcd_group_items}}"
+      tags:
+        - etcd
+        - groups
+      when:
+        - etcd_group_items is defined
+
+    - name: Create users
+      user:
+        name:     "{{item.name}}"
+        uid:      "{{item.uid}}"
+        group:    "{{item.group}}"
+        groups:   "{{item.groups}}"
+        state:    present
+      with_items: "{{etcd_user_items}}"
+      tags:
+        - etcd
+        - users
+      when:
+        - etcd_user_items is defined
+
+    - name: Create etcd data directory
+      file:
+        path: "{{etcd_data_dir}}"
+        state: directory
+        owner: "{{etcd_user}}"
+      tags:
+        - etcd
+ 
   roles:
     - ansible-role-etcd
+
+
+- name:  site.yaml | Docker roles
+  hosts: docker
+  become: True
+  become_user: root
+
+  handlers:
+    - name: reload systemd
+      command: systemctl daemon-reload
+
+  pre_tasks:
+    - name: Create groups
+      group:
+        name:     "{{item.name}}"
+        gid:      "{{item.gid}}"
+        state:    present
+      with_items: "{{docker_group_items}}"
+      tags:
+        - docker
+        - groups
+      when:
+        - docker_group_items is defined
+
+    - name: Create docker data directory
+      file:
+        path: "{{docker_data_dir}}"
+        state: directory
+        owner: "root"
+        group: "{{docker_group}}"
+      tags:
+        - docker
+      
+    - name: Add download.docker.com DNS resolv for dev environment
+      shell: "echo '{{docker_repo_ip}}	download.docker.com'|tee -a /etc/hosts"
+      tags:
+        - docker
+      #when:
+      #  - environment == 'dev'
+
+  roles:
+    - ansible-role-docker
+
+
+  post_tasks:
+    - name: Docker service config
+      template:
+        src: etc/default/docker.j2
+        dest: "{{docker_conf_dir}}/docker"
+      tags:
+        - docker
+
+    - name: Docker service file
+      template:
+        src: etc/systemd/system/docker.service.j2
+        dest: /usr/lib/systemd/system/docker.service
+      notify: 
+        - reload systemd
+        - restart docker
+      tags:
+        - docker
+        - reboot

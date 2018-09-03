@@ -1,0 +1,7 @@
+---
+
+docker_group: docker
+
+docker_group_items:
+  - name: "{{docker_group}}"
+    gid: 2376
