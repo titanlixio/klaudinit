@@ -1,0 +1,46 @@
+---
+
+- name: Haproxy for vm
+  hosts: local
+  become: False
+  become_user: root
+
+  vars:
+    haproxy_conf_dir: /etc/haproxy
+
+  tasks:
+    - name: Install haproxy
+      yum: name=haproxy state=present
+      tags:
+        - haproxy
+
+    - name: Check haproxy config backup
+      stat: "path={{haproxy_conf_dir}}/haproxy.cfg.orig"
+      register: haproxy_cfg_backup
+
+    - name: Backup haproxy config
+      copy:
+        src:   "{{haproxy_conf_dir}}/haproxy.cfg"
+        dest:  "{{haproxy_conf_dir}}/haproxy.cfg.orig"
+        owner: root
+        group: root
+        mode:  0644
+      tags:
+        - haproxy
+      when:
+        not haproxy_cfg_backup.stat.exists
+
+    #- name: Print ports
+    #  debug: msg="{{port_rules}}"
+
+    - name: Override haproxy config
+      template:
+        src:  "etc/haproxy/haproxy.cfg.j2"
+        dest: "{{haproxy_conf_dir}}/haproxy.cfg"
+      tags:
+        - haproxy
+
+    - name: Start haproxy
+      systemd: name=haproxy state=restarted enabled=yes daemon_reload=yes
+      tags:
+        - haproxy

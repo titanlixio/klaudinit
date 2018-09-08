@@ -1,0 +1,58 @@
+---
+
+- name:  etcd.yaml | Prepare etcd installation
+  hosts: controller
+  become: True
+  become_user: root
+
+  pre_tasks:
+    - name: Remove default template files
+      file: 
+        path: '{{playbook_dir}}/../vendors/ansible-role-etcd/templates/etc'
+        state: absent
+      tags:
+        - etcd
+        - etcd-systemd
+
+- name:  etcd.yaml | Etcd roles
+  hosts: etcd
+  become: True
+  become_user: root
+
+  pre_tasks:
+    - name: Create groups
+      group:
+        name:     "{{item.name}}"
+        gid:      "{{item.gid}}"
+        state:    present
+      with_items: "{{etcd_group_items}}"
+      tags:
+        - etcd
+        - groups
+      when:
+        - etcd_group_items is defined
+
+    - name: Create users
+      user:
+        name:     "{{item.name}}"
+        uid:      "{{item.uid}}"
+        group:    "{{item.group}}"
+        groups:   "{{item.groups}}"
+        state:    present
+      with_items: "{{etcd_user_items}}"
+      tags:
+        - etcd
+        - users
+      when:
+        - etcd_user_items is defined
+
+    - name: Create etcd data directory
+      file:
+        path: "{{etcd_data_dir}}"
+        state: directory
+        owner: "{{etcd_user}}"
+      tags:
+        - etcd
+ 
+  roles:
+    - ansible-role-etcd

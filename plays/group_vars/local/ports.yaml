@@ -1,0 +1,26 @@
+---
+
+port_rules:
+  - name: ctrl01
+    vms:
+      - name: ctrl01
+        addr: 10.39.1.199
+    ports:
+      - name: ssh
+        type: tcp
+        src:  22
+        dest: 23122
+
+  - name: node01
+    vms:
+      - name: node01
+        addr: 10.39.1.2
+    ports:
+      - name: ssh
+        type: tcp
+        src:  22
+        dest: 24122
+      - name: tomcat
+        type: tcp
+        src:  8080
+        dest: 24180

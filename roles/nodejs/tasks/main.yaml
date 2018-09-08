@@ -1,0 +1,21 @@
+---
+
+- name: Install nodejs repo
+  shell: "curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -"
+  tags:
+    - nodejs
+    - pkgs
+
+- name: Yum install nodejs
+  yum: 
+    name:  nodejs
+    state: present
+  tags:
+    - nodejs
+    - pkgs
+
+- name: Npm install yarn
+  npm: name=yarn global=yes state=present
+  tags:
+    - nodejs
+    - npm

@@ -16,3 +16,6 @@ vendors/ansible-role-*
 .terraform
 terraform.d
 vboxs/terraform*
+vboxs/alicloud/play2
+
+cluster

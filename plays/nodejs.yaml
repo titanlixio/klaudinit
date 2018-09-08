@@ -1,0 +1,9 @@
+---
+
+- name:  nodejs.yaml | NodeJS Roles
+  hosts: all
+  become: True
+  become_user: root
+
+  roles:
+    - nodejs

@@ -23,15 +23,19 @@ variable "ssh_user" {
 }
 
 variable "private_key_path" {
-  default = "vboxs/.ssh/id_rsa"
+  default = "../.ssh/id_rsa"
 }
 
 variable "public_key_path" {
-  default = "vboxs/.ssh/id_rsa.pub"
+  default = "../.ssh/id_rsa.pub"
 }
 
 variable "user_data_script" {
   default = "sh -c 'mkdir -p /tmp/xxoo'"
+}
+
+variable "project_home" {
+  default = "../.."
 }
 
 variable "klaudinit_home" {
